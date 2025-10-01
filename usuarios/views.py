@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import UsuarioAdaptadoCreationForm, LoginForm
+from .forms import UsuarioAdaptadoCreationForm, LoginForm,PerfilForm
 from django.contrib.auth.models import Group
 
 
@@ -54,3 +54,16 @@ def logout_view(request):
     logout(request)
     messages.info(request, 'Você saiu do sistema.')
     return redirect('login')
+
+@login_required
+def perfil_view(request):
+    if request.method == 'POST':
+        form = PerfilForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Perfil atualizado com sucesso!')
+            return redirect('perfil')
+    else:
+        form = PerfilForm(instance=request.user)
+    
+    return render(request, 'usuarios/perfil.html', {'form': form})

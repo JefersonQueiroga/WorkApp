@@ -26,16 +26,32 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
+        .top-navbar .container-fluid {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+            padding: 0;
+        }
+
         .top-navbar .navbar-brand {
             color: white;
             font-size: 1.5rem;
             font-weight: bold;
             padding-left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+            height: 100%;
         }
 
         .top-navbar .user-menu {
             color: white;
             margin-right: 20px;
+            display: flex;
+            align-items: center;
+            height: 100%;
         }
 
         .top-navbar .dropdown-toggle {
@@ -43,10 +59,86 @@
             border: none;
             color: white;
             font-weight: 500;
+            padding: 8px 15px;
         }
 
         .top-navbar .dropdown-toggle:hover {
             background-color: rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+
+        .top-navbar .user-btn {
+            transition: all 0.3s;
+        }
+
+        .top-navbar .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .top-navbar .user-info {
+            line-height: 1.2;
+        }
+
+        .top-navbar .user-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .top-navbar .user-groups {
+            font-size: 0.75rem;
+            margin-top: 2px;
+        }
+
+        .top-navbar .user-groups .badge {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            margin-right: 3px;
+            font-weight: 500;
+        }
+
+        .dropdown-menu {
+            border-radius: 8px;
+            border: none;
+            min-width: 220px;
+        }
+
+        .dropdown-menu .dropdown-header {
+            font-weight: 600;
+            color: var(--dark-gray);
+            padding: 10px 15px;
+        }
+
+        .dropdown-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-green);
+        }
+
+        .dropdown-item {
+            padding: 10px 15px;
+            transition: all 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--light-green);
+            color: var(--primary-green);
+        }
+
+        .dropdown-item.text-danger:hover {
+            background-color: #fee;
+            color: #dc3545 !important;
+        }
+
+        .dropdown-item i {
+            width: 20px;
+            margin-right: 8px;
         }
 
         /* Sidebar */
@@ -136,22 +228,68 @@
             </span>
             <div class="user-menu">
                 <div class="dropdown">
-                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                        <i class="bi bi-person-circle"></i> 
-                        {% if user.is_authenticated %}
-                            {{ user.email }}
-                        {% else %}
-                            Visitante
-                        {% endif %}
+                    <button class="btn dropdown-toggle user-btn" type="button" data-bs-toggle="dropdown">
+                        <div class="d-flex align-items-center gap-2">
+                            {% if user.is_authenticated %}
+                                {% if user.foto_perfil %}
+                                    <img src="{{ user.foto_perfil.url }}" alt="{{ user.username }}" class="user-avatar">
+                                {% else %}
+                                    <i class="bi bi-person-circle fs-4"></i>
+                                {% endif %}
+                            {% else %}
+                                <i class="bi bi-person-circle fs-4"></i>
+                            {% endif %}
+                            <div class="user-info text-start">
+                                {% if user.is_authenticated %}
+                                    <div class="user-name">{{ user.email }}</div>
+                                    
+                                {% else %}
+                                    <div class="user-name">Visitante</div>
+                                {% endif %}
+                            </div>
+                        </div>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
+                    <ul class="dropdown-menu dropdown-menu-end shadow">
                         {% if user.is_authenticated %}
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Perfil</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Configurações</a></li>
+                            <li class="dropdown-header d-flex align-items-center gap-2">
+                                {% if user.foto_perfil %}
+                                    <img src="{{ user.foto_perfil.url }}" alt="{{ user.username }}" class="dropdown-avatar">
+                                {% else %}
+                                    <i class="bi bi-person-badge fs-4"></i>
+                                {% endif %}
+                                <span>{{ user.get_full_name|default:user.username }}</span>
+                            </li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right"></i> Sair</a></li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'perfil' %}">
+                                    <i class="bi bi-person"></i> Meu Perfil
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <i class="bi bi-gear"></i> Configurações
+                                </a>
+                            </li>
+                            {% if user.is_gerente %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="/admin/">
+                                        <i class="bi bi-shield-lock"></i> Painel Admin
+                                    </a>
+                                </li>
+                            {% endif %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-danger" href="{% url 'logout' %}">
+                                    <i class="bi bi-box-arrow-right"></i> Sair
+                                </a>
+                            </li>
                         {% else %}
-                            <li><a class="dropdown-item" href="{% url 'admin:login' %}"><i class="bi bi-box-arrow-in-right"></i> Entrar</a></li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'login' %}">
+                                    <i class="bi bi-box-arrow-in-right"></i> Entrar
+                                </a>
+                            </li>
                         {% endif %}
                     </ul>
                 </div>
@@ -174,6 +312,7 @@
             <a class="nav-link" href="#">
                 <i class="bi bi-archive"></i> Vagas Arquivadas
             </a>
+            
             {% if request.user.is_gerente %}
                 <a class="nav-link" href="#">
                     <i class="bi bi-bar-chart"></i> Relatórios
