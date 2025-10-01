@@ -19,7 +19,7 @@ def criar_vaga(request):
             return redirect('listar_vagas')  # Sem o namespace
     else:
         form = VagaEmpregoForm()
-    return render(request, 'emprego/form_vaga.html', {'form': form, 'titulo': 'Cadastrar Vaga'})
+    return render(request, 'vaga/form_vaga.html', {'form': form, 'titulo': 'Cadastrar Vaga'})
 
 @login_required
 def editar_vaga(request, pk):
@@ -32,7 +32,7 @@ def editar_vaga(request, pk):
             return redirect('listar_vagas')  # Sem o namespace
     else:
         form = VagaEmpregoForm(instance=vaga)
-    return render(request, 'emprego/form_vaga.html', {'form': form, 'titulo': 'Editar Vaga'})
+    return render(request, 'vaga/form_vaga.html', {'form': form, 'titulo': 'Editar Vaga'})
 
 @login_required
 def deletar_vaga(request, pk):
@@ -41,4 +41,4 @@ def deletar_vaga(request, pk):
         vaga.delete()
         messages.success(request, 'Vaga deletada com sucesso!')
         return redirect('listar_vagas')  # Sem o namespace
-    return render(request, 'emprego/confirmar_delete.html', {'vaga': vaga})
+    return render(request, 'vaga/confirmar_delete.html', {'vaga': vaga})

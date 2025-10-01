@@ -10,9 +10,11 @@
                 <h2 class="mb-0">
                     <i class="bi bi-briefcase text-success"></i> Vagas de Emprego
                 </h2>
+                {% if user.is_gerente %}
                 <a href="{% url 'criar_vaga' %}" class="btn btn-success">
                     <i class="bi bi-plus-circle"></i> Nova Vaga
                 </a>
+                {% endif %}
             </div>
             <hr>
         </div>
@@ -49,10 +51,21 @@
                                 {{ vaga.descricao|truncatewords:15 }}
                             </p>
                             
-                            <div>
+                            <div class="mb-3">
                                 <i class="bi bi-telephone text-success"></i>
                                 <strong>Contato:</strong> {{ vaga.telefone_contato }}
                             </div>
+
+                            {% if user.is_gerente %}
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'editar_vaga' vaga.pk %}" class="btn btn-sm btn-outline-primary flex-fill">
+                                    <i class="bi bi-pencil"></i> Editar
+                                </a>
+                                <a href="{% url 'deletar_vaga' vaga.pk %}" class="btn btn-sm btn-outline-danger flex-fill">
+                                    <i class="bi bi-trash"></i> Excluir
+                                </a>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -65,9 +78,11 @@
                     <i class="bi bi-info-circle" style="font-size: 2rem;"></i>
                     <h4 class="mt-3">Nenhuma vaga cadastrada</h4>
                     <p>Comece cadastrando sua primeira vaga de emprego!</p>
+                    {% if user.is_gerente %}
                     <a href="{% url 'criar_vaga' %}" class="btn btn-success mt-2">
                         <i class="bi bi-plus-circle"></i> Cadastrar Primeira Vaga
                     </a>
+                    {% endif %}
                 </div>
             </div>
         </div>

@@ -8,7 +8,7 @@ class VagaEmprego(models.Model):
     data_cadastro = models.DateTimeField(default=timezone.now, verbose_name="Data de Cadastro")
     ativo = models.BooleanField(default=True, verbose_name="Ativo")
     telefone_contato = models.CharField(max_length=20, verbose_name="Telefone de Contato")
-    
+
     class Meta:
         verbose_name = "Vaga de Emprego"
         verbose_name_plural = "Vagas de Emprego"
