@@ -139,7 +139,7 @@
                     <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
                         <i class="bi bi-person-circle"></i> 
                         {% if user.is_authenticated %}
-                            {{ user.username }}
+                            {{ user.email }}
                         {% else %}
                             Visitante
                         {% endif %}
@@ -174,13 +174,16 @@
             <a class="nav-link" href="#">
                 <i class="bi bi-archive"></i> Vagas Arquivadas
             </a>
-            <a class="nav-link" href="#">
-                <i class="bi bi-bar-chart"></i> Relatórios
-            </a>
-            <hr class="text-light mx-3">
-            <a class="nav-link" href="/admin/">
-                <i class="bi bi-gear-fill"></i> Administração
-            </a>
+            {% if 'GERENTE' in user.groups.values_list('name', flat=True) %}
+
+                <a class="nav-link" href="#">
+                    <i class="bi bi-bar-chart"></i> Relatórios
+                </a>
+                <hr class="text-light mx-3">
+                <a class="nav-link" href="/admin/">
+                    <i class="bi bi-gear-fill"></i> Administração
+                </a>
+            {% endif %}   
         </nav>
     </div>
 

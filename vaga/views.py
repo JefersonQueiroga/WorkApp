@@ -9,6 +9,7 @@ def listar_vagas(request):
     vagas = VagaEmprego.objects.all()
     return render(request, 'vaga/index.html', {'vagas': vagas})
 
+@login_required
 def criar_vaga(request):
     if request.method == 'POST':
         form = VagaEmpregoForm(request.POST, request.FILES)
@@ -20,6 +21,7 @@ def criar_vaga(request):
         form = VagaEmpregoForm()
     return render(request, 'emprego/form_vaga.html', {'form': form, 'titulo': 'Cadastrar Vaga'})
 
+@login_required
 def editar_vaga(request, pk):
     vaga = get_object_or_404(VagaEmprego, pk=pk)
     if request.method == 'POST':
@@ -32,6 +34,7 @@ def editar_vaga(request, pk):
         form = VagaEmpregoForm(instance=vaga)
     return render(request, 'emprego/form_vaga.html', {'form': form, 'titulo': 'Editar Vaga'})
 
+@login_required
 def deletar_vaga(request, pk):
     vaga = get_object_or_404(VagaEmprego, pk=pk)
     if request.method == 'POST':

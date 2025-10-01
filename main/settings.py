@@ -125,6 +125,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# informando para o django o usuario utilizado.
 AUTH_USER_MODEL = 'usuarios.UsuarioAdaptado'
 
 # URLs de redirecionamento após login/logout
