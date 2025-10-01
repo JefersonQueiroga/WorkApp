@@ -174,8 +174,7 @@
             <a class="nav-link" href="#">
                 <i class="bi bi-archive"></i> Vagas Arquivadas
             </a>
-            {% if 'GERENTE' in user.groups.values_list('name', flat=True) %}
-
+            {% if request.user.is_gerente %}
                 <a class="nav-link" href="#">
                     <i class="bi bi-bar-chart"></i> Relatórios
                 </a>

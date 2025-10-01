@@ -10,3 +10,9 @@ class UsuarioAdaptado(AbstractUser):
 
     def __str__(self):
         return f"{self.username} - {self.cpf}"
+    
+    def is_gerente(self):
+        return self.groups.filter(name="GERENTE").exists()
+    
+    def is_user_simples(self):
+        return self.groups.filter(name="USUARIO_SIMPLES").exists()
