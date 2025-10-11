@@ -4,16 +4,16 @@ from .models import VagaEmprego
 from .forms import VagaEmpregoForm
 from django.contrib.auth.decorators import login_required
 from .forms import VagaEmpregoForm, VagaFiltroForm  # ← ADICIONE
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger # ← ADICIONE paginacao
 
 @login_required
 def listar_vagas(request):
+    # Buscar todas as vagas
     vagas = VagaEmprego.objects.all()
-    # ========== ADICIONE ESTE BLOCO ==========
-    # Criar instância do formulário
+    
+    # ========== FILTROS ==========
     filtro_form = VagaFiltroForm(request.GET or None)
     
-    # Aplicar filtros se válido
     if filtro_form.is_valid():
         # Filtro por descrição
         descricao = filtro_form.cleaned_data.get('descricao')
@@ -34,11 +34,33 @@ def listar_vagas(request):
         apenas_ativas = filtro_form.cleaned_data.get('apenas_ativas')
         if apenas_ativas:
             vagas = vagas.filter(ativo=True)
-
+    
+    # ========== PAGINAÇÃO ==========
+    # Definir quantos itens por página
+    itens_por_pagina = 9  # 9 cards ficam bem dispostos em 3 colunas
+    
+    # Criar o objeto Paginator
+    paginator = Paginator(vagas, itens_por_pagina)
+    
+    # Pegar o número da página atual da URL (ex: ?page=2)
+    page_number = request.GET.get('page')
+    
+    try:
+        # Tentar obter a página solicitada
+        page_obj = paginator.get_page(page_number)
+    except PageNotAnInteger:
+        # Se page não for um inteiro, retornar primeira página
+        page_obj = paginator.get_page(1)
+    except EmptyPage:
+        # Se page estiver fora do alcance, retornar última página
+        page_obj = paginator.get_page(paginator.num_pages)
+    
     return render(request, 'vaga/index.html', {
-        'vagas': vagas,
-        'filtro_form': filtro_form  # ← ADICIONE
+        'vagas': page_obj,  # Agora enviamos o objeto paginado
+        'filtro_form': filtro_form,
+        'page_obj': page_obj,  # Enviamos também para usar no template
     })
+
 
 @login_required
 def criar_vaga(request):
