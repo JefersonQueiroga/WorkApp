@@ -30,15 +30,12 @@ class Command(BaseCommand):
                 self.stdout.write(
                     self.style.WARNING(f'   → Grupo "{nome_grupo}" já existe')
                 )
-        
-        # ==================================================
-        # RESUMO FINAL
-        # ==================================================
+      
         self.stdout.write('\n' + '=' * 70)
         self.stdout.write(self.style.SUCCESS('✓ PROCESSO CONCLUÍDO!'))
         self.stdout.write('=' * 70)
         
-        self.stdout.write('\n📊 RESUMO:\n')
+        self.stdout.write('\nRESUMO:\n')
         
         if grupos_criados:
             self.stdout.write(f'   ✓ Grupos criados: {", ".join(grupos_criados)}')
@@ -46,14 +43,11 @@ class Command(BaseCommand):
         if grupos_existentes:
             self.stdout.write(f'   → Grupos já existentes: {", ".join(grupos_existentes)}')
         
-        self.stdout.write(f'\n   📌 Total de grupos no sistema: {Group.objects.count()}')
+        self.stdout.write(f'\n    Total de grupos no sistema: {Group.objects.count()}')
         
         # Listar todos os grupos
-        self.stdout.write('\n📋 GRUPOS CADASTRADOS NO SISTEMA:\n')
+        self.stdout.write('\nGRUPOS CADASTRADOS NO SISTEMA:\n')
         
-        self.stdout.write('┌' + '─' * 68 + '┐')
-        self.stdout.write(f'│ {"ID":<5} │ {"NOME DO GRUPO":<58} │')
-        self.stdout.write('├' + '─' * 68 + '┤')
         
         for grupo in Group.objects.all().order_by('name'):
             self.stdout.write(f'│ {grupo.id:<5} │ {grupo.name:<58} │')
