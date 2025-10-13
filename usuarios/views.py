@@ -135,8 +135,7 @@ def listar_usuarios(request):
     return render(request, 'usuarios/listar_usuarios.html', {
         'usuarios': page_obj,
         'filtro_form': filtro_form,
-        'page_obj': page_obj,
-    })
+       })
 
 
 @login_required
